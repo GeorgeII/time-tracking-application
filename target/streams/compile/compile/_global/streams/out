@@ -1,0 +1,13 @@
+[0m[[0m[31merror[0m] [0m[0m/home/george/Projects/scala-sandbox/play-samples-play-scala-starter-example/app/controllers/HomeController.scala:22:24: not enough arguments for method apply: (implicit assetsFinder: controllers.AssetsFinder)play.twirl.api.HtmlFormat.Appendable in object index.[0m
+[0m[[0m[31merror[0m] [0m[0mUnspecified value parameter assetsFinder.[0m
+[0m[[0m[31merror[0m] [0m[0m    Ok(views.html.index())[0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/george/Projects/scala-sandbox/play-samples-play-scala-starter-example/app/views/index.scala.html:14:7: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : String("Welcome to Play")[0m
+[0m[[0m[31merror[0m] [0m[0m required: play.twirl.api.Html[0m
+[0m[[0m[31merror[0m] [0m[0m@main("Welcome to Play") {[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/george/Projects/scala-sandbox/play-samples-play-scala-starter-example/app/views/main.scala.html:14:17: not found: value title[0m
+[0m[[0m[31merror[0m] [0m[0m        <title>@title</title>[0m
+[0m[[0m[31merror[0m] [0m[0m                ^[0m
+[0m[[0m[31merror[0m] [0m[0mthree errors found[0m
