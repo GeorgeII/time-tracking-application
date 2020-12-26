@@ -10,9 +10,9 @@ import scala.concurrent.{Future, ExecutionContext}
 object SubjectDao {
 
   class Subjects(tag: Tag) extends Table[Subject](tag, _schemaName = Option("public"), _tableName = "Subjects") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-    def userId = column[Int]("user_id")
+    def userId = column[Long]("user_id")
 
     def name = column[String]("name")
 
@@ -37,11 +37,16 @@ object SubjectDao {
     db.run(subjects.filter(_.name === name).result.headOption)
   }
 
-  def createUser(nickname: String, password: String): Future[Int] = {
-    // TODO: inser subject
-    val query =  users += User(nickname, password)
-    db.run(query)
+  def createSubject(name: String, userId: Long): Future[Int] = {
+    val createQuery =  subjects += Subject(userId, name, 0, 0, 0)
+
+    db.run(createQuery)
   }
 
-  // TODO: update subject
+  def updateSubject(subject: Subject, userId: Int): Future[Int] = {
+    val updateSubjectQuery = subjects.filter(_.userId === subject.userId).filter(_.name === subject.name)
+      .map(item => (item.hours, item.minutes, item.seconds)).update(subject.hours, subject.minutes, subject.seconds)
+
+    db.run(updateSubjectQuery)
+  }
 }

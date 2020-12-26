@@ -4,12 +4,12 @@ import models.User
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.JdbcBackend.Database
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Future
 
 object UserDao {
 
   class Users(tag: Tag) extends Table[User](tag, _schemaName = Option("public"), _tableName = "Users") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc) // This is the primary key column
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc) // This is the primary key column
 
     def nickname = column[String]("nickname")
 
