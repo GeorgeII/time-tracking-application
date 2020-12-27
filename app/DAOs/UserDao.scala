@@ -4,6 +4,7 @@ import models.User
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.JdbcBackend.Database
 
+import java.util.UUID
 import scala.concurrent.Future
 
 object UserDao {
@@ -15,8 +16,10 @@ object UserDao {
 
     def password = column[String]("password")
 
+    def identifier = column[UUID]("password")
+
     // Every table needs a * projection with the same type as the table's type parameter
-    def * = (nickname, password) <> (User.tupled, User.unapply)
+    def * = (nickname, password, identifier) <> (User.tupled, User.unapply)
   }
 
   lazy val users = TableQuery[Users]
@@ -27,8 +30,8 @@ object UserDao {
     db.run(users.filter(_.nickname === nickname).result.headOption)
   }
 
-  def createUser(nickname: String, password: String): Future[Int] = {
-    val query =  users += User(nickname, password)
+  def createUser(user: User): Future[Int] = {
+    val query =  users += user
     db.run(query)
   }
 }

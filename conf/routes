@@ -5,7 +5,13 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 
-GET     /subjects                   controllers.AccountController.showSubjects
+POST    /user/create                controllers.HomeController.createUser
+
+POST    /user/authorize             controllers.HomeController.authorize
+
+GET     /personal-page              controllers.AccountController.personalPage
+
+GET     /subjects                   controllers.AccountController.subjects
 
 POST    /subjects/create            controllers.AccountController.createSubject
 

@@ -5,7 +5,7 @@ import DAOs.UserDao.users
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.JdbcBackend.Database
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Future
 
 object SubjectDao {
 

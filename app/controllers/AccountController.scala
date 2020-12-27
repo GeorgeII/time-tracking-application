@@ -8,10 +8,14 @@ import javax.inject._
  * This controller handles all the subjects that a user has. Also, it allows to create a new subject.
  */
 @Singleton
-class AccountController @Inject() (cc: ControllerComponents)
+class AccountController @Inject()(cc: ControllerComponents)(implicit assetsFinder: AssetsFinder)
   extends AbstractController(cc) {
 
-  def showSubjects = Action {
+  def personalPage = Action {
+    Ok(views.html.personalPage("This message was written in AccountController.showPersonalPage method."))
+  }
+
+  def subjects = Action {
     Ok("showSubjects")
   }
 
