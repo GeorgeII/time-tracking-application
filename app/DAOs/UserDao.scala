@@ -16,7 +16,7 @@ object UserDao {
 
     def password = column[String]("password")
 
-    def identifier = column[UUID]("password")
+    def identifier = column[UUID]("identifier")
 
     // Every table needs a * projection with the same type as the table's type parameter
     def * = (nickname, password, identifier) <> (User.tupled, User.unapply)

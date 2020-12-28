@@ -3,7 +3,7 @@
  * message to display and an AssetsFinder to locate static assets.
  *@
 
-@(form: Form[UserInformation], postUrl: Call)(implicit assetsFinder: AssetsFinder, request: MessagesRequestHeader)
+@(implicit assetsFinder: AssetsFinder)
 
 
 @*
@@ -14,7 +14,5 @@
 @main {
 
     @welcome("Time Tracking System", style = "scala")
-
-    @userForm(form, postUrl)
 
 }
