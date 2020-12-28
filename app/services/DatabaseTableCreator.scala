@@ -21,9 +21,9 @@ class DatabaseTableCreator{
   val testDb = Database.forConfig("test-db-postgres")
 
   val tables = List(UserDao.users, SubjectDao.subjects)
+  val databases = List(db, testDb)
 
-  createInParticularDatabase(db)
-  //createInParticularDatabase(testDb)
+  databases.foreach(createInParticularDatabase)
 
   def createInParticularDatabase(db: Database): Unit = {
     val existing = db.run(MTable.getTables)
