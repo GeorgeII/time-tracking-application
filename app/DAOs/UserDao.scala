@@ -9,7 +9,18 @@ import scala.concurrent.Future
 
 object UserDao {
 
-  class Users(tag: Tag) extends Table[User](tag, _schemaName = Option("public"), _tableName = "Users") {
+  type Data = (Option[Long], String, String, UUID)
+
+  def constructUser: Data => User = {
+    case (id, nickname, password, identifier) => User(nickname, password, identifier)
+  }
+
+  def extractUser: PartialFunction[User, Data] = {
+    case User(nickname, password, identifier) =>
+      (None, nickname, password, identifier)
+  }
+
+  class Users(tag: Tag) extends Table[User](tag, _tableName = "Users") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc) // This is the primary key column
 
     def nickname = column[String]("nickname")
@@ -19,7 +30,7 @@ object UserDao {
     def identifier = column[UUID]("identifier")
 
     // Every table needs a * projection with the same type as the table's type parameter
-    def * = (nickname, password, identifier) <> (User.tupled, User.unapply)
+    def * = (id.?, nickname, password, identifier) <> (constructUser, extractUser.lift)
   }
 
   lazy val users = TableQuery[Users]

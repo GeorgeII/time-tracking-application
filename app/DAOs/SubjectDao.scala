@@ -9,7 +9,18 @@ import scala.concurrent.Future
 
 object SubjectDao {
 
-  class Subjects(tag: Tag) extends Table[Subject](tag, _schemaName = Option("public"), _tableName = "Subjects") {
+  type Data = (Option[Long], Long, String, Int, Int, Int)
+
+  def constructSubject: Data => Subject = {
+    case (id, userId, name, hours, minutes, seconds) => Subject(userId, name, hours, minutes, seconds)
+  }
+
+  def extractSubject: PartialFunction[Subject, Data] = {
+    case Subject(userId, name, hours, minutes, seconds) =>
+      (None, userId, name, hours, minutes, seconds)
+  }
+
+  class Subjects(tag: Tag) extends Table[Subject](tag, _tableName = "Subjects") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
     def userId = column[Long]("user_id")
@@ -22,7 +33,7 @@ object SubjectDao {
 
     def seconds = column[Int]("seconds")
 
-    def * = (userId, name, hours, minutes, seconds) <> (Subject.tupled, Subject.unapply)
+    def * = (id.?, userId, name, hours, minutes, seconds) <> (constructSubject, extractSubject.lift)
 
     // A reified foreign key relation that can be navigated to create a join
     def user =
