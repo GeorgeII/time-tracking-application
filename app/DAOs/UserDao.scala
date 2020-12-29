@@ -23,7 +23,7 @@ object UserDao {
   class Users(tag: Tag) extends Table[User](tag, _tableName = "Users") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc) // This is the primary key column
 
-    def nickname = column[String]("nickname")
+    def nickname = column[String]("nickname", O.Unique)
 
     def password = column[String]("password")
 
