@@ -1,4 +1,4 @@
-@(message: String, style: String = "scala")
+@(userForm: Form[UserData])(implicit messages: Messages, request: RequestHeader)
 
 @defining(play.core.PlayVersion.current) { version =>
 
@@ -45,6 +45,35 @@
     </p>
 
     <h2>You have to be authorized in the system so that you can use this application.</h2>
+
+    <div id="log-in-block" class="input-form">
+        <div class="form-name">
+            Log In
+        </div>
+
+        @helper.form(action = helper.CSRF(routes.HomeController.authorize()), Symbol("id") -> "log-in-form") {
+            @helper.inputText(userForm("Nickname"))
+            @helper.inputPassword(userForm("Password"))
+            <button id="log-in-button">Log In</button>
+        }
+    </div>
+
+    <div id="or-word">
+        OR
+    </div>
+
+    <div id="sign-up-block" class="input-form">
+        <div class="form-name">
+            Sign Up.
+        </div>
+        Please, DO NOT use your real passwords as I am not an expert in security!
+
+        @helper.form(action = helper.CSRF(routes.HomeController.createUser()), Symbol("id") -> "sign-up-form") {
+            @helper.inputText(userForm("Nickname"))
+            @helper.inputPassword(userForm("Password"))
+            <button id="sign-up-button">Sign Up</button>
+        }
+    </div>
 
 </article>
 
