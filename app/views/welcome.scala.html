@@ -44,35 +44,42 @@
         4. You can look at your overall statistics. Just press "Show statistics" button.
     </p>
 
-    <h2>You have to be authorized in the system so that you can use this application.</h2>
+    <h2>You have to be authorized in the system so that you can use this application:</h2>
 
-    <div id="log-in-block" class="input-form">
-        <div class="form-name">
-            Log In
+    <div id="two-forms">
+        <div id="log-in-block" class="input-form">
+            <div class="form-name">
+                Log In
+            </div>
+
+            @helper.form(action = helper.CSRF(routes.HomeController.authorize()), Symbol("id") -> "log-in-form",
+                Symbol("class") -> "helper-forms") {
+                    @helper.inputText(userForm("Nickname"))
+                    @helper.inputPassword(userForm("Password"))
+                    <button id="log-in-button">Log In</button>
+            }
         </div>
 
-        @helper.form(action = helper.CSRF(routes.HomeController.authorize()), Symbol("id") -> "log-in-form") {
-            @helper.inputText(userForm("Nickname"))
-            @helper.inputPassword(userForm("Password"))
-            <button id="log-in-button">Log In</button>
-        }
-    </div>
-
-    <div id="or-word">
-        OR
-    </div>
-
-    <div id="sign-up-block" class="input-form">
-        <div class="form-name">
-            Sign Up.
+        <div id="or-word">
+            OR
         </div>
-        Please, DO NOT use your real passwords as I am not an expert in security!
 
-        @helper.form(action = helper.CSRF(routes.HomeController.createUser()), Symbol("id") -> "sign-up-form") {
-            @helper.inputText(userForm("Nickname"))
-            @helper.inputPassword(userForm("Password"))
-            <button id="sign-up-button">Sign Up</button>
-        }
+        <div id="sign-up-block" class="input-form">
+            <div class="form-name">
+                Sign Up.
+            </div>
+            <div id="password-caution">
+                Please, DO NOT use your real
+                passwords as I am not an expert in security!
+            </div>
+
+            @helper.form(action = helper.CSRF(routes.HomeController.createUser()), Symbol("id") -> "sign-up-form",
+                Symbol("class") -> "helper-forms") {
+                    @helper.inputText(userForm("Nickname"))
+                    @helper.inputPassword(userForm("Password"))
+                    <button id="sign-up-button">Sign Up</button>
+            }
+        </div>
     </div>
 
 </article>
