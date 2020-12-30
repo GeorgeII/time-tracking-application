@@ -1,0 +1,30 @@
+@(nickname: String, subjectForm: Form[SubjectData], style: String = "scala")(implicit messages: Messages, request: RequestHeader)
+
+@defining(play.core.PlayVersion.current) { version =>
+
+    <section id="top">
+        <div class="wrapper">
+            <h1><a href="/">Time Tracking System</a></h1>
+        </div>
+    </section>
+
+    <div id="content" class="wrapper doc">
+        <article>
+            <h1>Hi, <b>@nickname</b>!</h1>
+
+            <div id="create-subject">
+            @helper.form(action = helper.CSRF(routes.AccountController.createSubject()),
+                Symbol("id") -> "create-subject-form",
+                Symbol("class") -> "helper-forms") {
+                    @helper.inputText(subjectForm("Enter your new subject here:"))
+                    <button id="create-subject-button">Create Subject</button>
+            }
+            </div>
+
+            <div id="subjects" class="subject-list">
+                <p>Subject 1</p>
+                <p>Subject 2</p>
+            </div>
+        </article>
+    </div>
+}

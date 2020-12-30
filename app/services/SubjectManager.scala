@@ -28,6 +28,21 @@ object SubjectManager {
     }
   }
 
+  def getSubject(name: String, user: String): Option[Subject] = {
+    val userId = services.UserManager.getId(user)
+    if (userId.isEmpty)
+      return None
+
+    val selectFromDatabaseByUserId = DAOs.SubjectDao.getSubject(name, userId.get)
+
+    Try(Await.result(selectFromDatabaseByUserId, 3.second)) match {
+      case Success(res) => res
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+  }
+
   /**
    *  Returns a sequence of all subject the user has (empty Seq if the user does not have any).
    */
@@ -48,7 +63,7 @@ object SubjectManager {
   }
 
   def convertToJson(subjects: Seq[Subject]): JsValue = {
-    implicit val horseProfileWrites: OWrites[Subject] = Json.writes[Subject]
+    implicit val subjectWrites: OWrites[Subject] = Json.writes[Subject]
     Json.toJson(subjects)
   }
 }
