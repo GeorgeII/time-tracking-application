@@ -9,15 +9,15 @@ import scala.concurrent.Future
 
 object SubjectDao {
 
-  type Data = (Option[Long], Long, String, Int, Int, Int)
+  type Data = (Option[Long], Long, String, Int, Int, Int, Long)
 
   def constructSubject: Data => Subject = {
-    case (id, userId, name, hours, minutes, seconds) => Subject(userId, name, hours, minutes, seconds)
+    case (id, userId, name, hours, minutes, seconds, totalSeconds) => Subject(userId, name, hours, minutes, seconds, totalSeconds)
   }
 
   def extractSubject: PartialFunction[Subject, Data] = {
-    case Subject(userId, name, hours, minutes, seconds) =>
-      (None, userId, name, hours, minutes, seconds)
+    case Subject(userId, name, hours, minutes, seconds, totalSeconds) =>
+      (None, userId, name, hours, minutes, seconds, totalSeconds)
   }
 
   class Subjects(tag: Tag) extends Table[Subject](tag, _tableName = "Subjects") {
@@ -33,7 +33,9 @@ object SubjectDao {
 
     def seconds = column[Int]("seconds")
 
-    def * = (id.?, userId, name, hours, minutes, seconds) <> (constructSubject, extractSubject.lift)
+    def totalSeconds = column[Long]("total_seconds")
+
+    def * = (id.?, userId, name, hours, minutes, seconds, totalSeconds) <> (constructSubject, extractSubject.lift)
 
     // A reified foreign key relation that can be navigated to create a join
     def user =
@@ -44,19 +46,24 @@ object SubjectDao {
 
   private lazy val db = Database.forConfig("postgres")
 
-  def getSubject(name: String, user: String): Future[Option[Subject]] = {
-    db.run(subjects.filter(_.name === name).result.headOption)
+  def getSubject(name: String, userId: Long): Future[Option[Subject]] = {
+    db.run(subjects.filter(_.userId === userId).filter(_.name === name).result.headOption)
+  }
+
+  def getAllSubjects(userId: Long): Future[Seq[Subject]] = {
+    db.run(subjects.filter(_.userId === userId).result)
   }
 
   def createSubject(name: String, userId: Long): Future[Int] = {
-    val createQuery =  subjects += Subject(userId, name, 0, 0, 0)
+    val createQuery =  subjects += Subject(userId, name, 0, 0, 0, 0)
 
     db.run(createQuery)
   }
 
-  def updateSubject(subject: Subject, userId: Int): Future[Int] = {
+  def updateSubject(subject: Subject): Future[Int] = {
     val updateSubjectQuery = subjects.filter(_.userId === subject.userId).filter(_.name === subject.name)
-      .map(item => (item.hours, item.minutes, item.seconds)).update(subject.hours, subject.minutes, subject.seconds)
+      .map(item => (item.hours, item.minutes, item.seconds, item.totalSeconds))
+      .update(subject.hours, subject.minutes, subject.seconds, subject.totalSeconds)
 
     db.run(updateSubjectQuery)
   }

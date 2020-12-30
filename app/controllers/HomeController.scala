@@ -1,7 +1,6 @@
 package controllers
 
 import play.api.data.Form
-import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n.{Lang, Messages}
 
@@ -44,14 +43,17 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
     userForm.bindFromRequest.fold(
       formWithErrors => {
         // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.error("Authorization got a problem. You must've filled the forms with errors!"))
+        BadRequest(views.html.error("Authorization got a problem. You must've filled the form with errors!"))
       },
       userData => {
         /* binding success, you get the actual value. */
         val identifier = services.UserManager.find(userData.nickname, userData.password)
-        if (identifier.isDefined)
+        val sessionToken = services.SessionTokenManager.create(userData.nickname)
+        if (identifier.isDefined && sessionToken.isDefined) {
           Redirect(routes.AccountController.personalPage())
-        else BadRequest(views.html.error("Authorization got a problem. Nickname or password is wrong!"))
+            .withCookies(Cookie("sessionToken", sessionToken.get.toString), Cookie("user", userData.nickname))
+            .bakeCookies()
+        } else BadRequest(views.html.error("Authorization got a problem. Nickname or password is wrong!"))
       }
     )
   }
@@ -69,8 +71,11 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit assetsFinder: 
       userData => {
         /* binding success, you get the actual value. */
         val identifier = services.UserManager.create(userData.nickname, userData.password)
+        val sessionToken = services.SessionTokenManager.create(userData.nickname)
         if (identifier.isDefined)
           Redirect(routes.AccountController.personalPage())
+            .withCookies(Cookie("sessionToken", sessionToken.get.toString), Cookie("user", userData.nickname))
+            .bakeCookies()
         else BadRequest(views.html.error("Authorization got a problem. Such username already exists or there's a database problem on the server!"))
       }
     )

@@ -11,7 +11,7 @@ POST    /user/authorize             controllers.HomeController.authorize
 
 GET     /personal-page              controllers.AccountController.personalPage
 
-GET     /subjects                   controllers.AccountController.subjects
+GET     /subjects                   controllers.AccountController.subjects(user: String, sessionToken: String)
 
 POST    /subjects/create            controllers.AccountController.createSubject
 
