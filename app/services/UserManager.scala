@@ -98,6 +98,32 @@ object UserManager {
   }
 
   /**
+   * Gets an id of a user. Primarily, this is required to join tables.
+   */
+  def getId(nickname: String): Option[Long] = {
+    val selectFromDatabaseByNickname = DAOs.UserDao.getId(nickname)
+    Try(Await.result(selectFromDatabaseByNickname, 3.second)) match {
+      case Success(res) => res
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+  }
+
+  /**
+   * Identifier is a UUID that was generated for a user during the sign up stage.
+   */
+  def getIdentifier(nickname: String): Option[UUID] = {
+    val selectFromDatabaseByNickname = DAOs.UserDao.getIdentifier(nickname)
+    Try(Await.result(selectFromDatabaseByNickname, 3.second)) match {
+      case Success(res) => res
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+  }
+
+  /**
    * Generates a hash of a given password.
    * @param password plain-text
    * @return salted hash

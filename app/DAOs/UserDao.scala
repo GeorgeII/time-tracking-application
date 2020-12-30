@@ -45,4 +45,12 @@ object UserDao {
     val query =  users += user
     db.run(query)
   }
+
+  def getId(nickname: String): Future[Option[Long]] = {
+    db.run(users.filter(_.nickname === nickname).map(_.id).result.headOption)
+  }
+
+  def getIdentifier(nickname: String): Future[Option[UUID]] = {
+    db.run(users.filter(_.nickname === nickname).map(_.identifier).result.headOption)
+  }
 }

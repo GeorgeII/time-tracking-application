@@ -1,16 +1,19 @@
-@(message: String, style: String = "scala")
+@(message: String, style: String = "scala")(implicit assetsFinder: AssetsFinder)
 
-@defining(play.core.PlayVersion.current) { version =>
+@main {
 
-<section id="top">
-    <div class="wrapper">
-        <h1><a href="/">Time Tracking System</a></h1>
-    </div>
-</section>
+    @defining(play.core.PlayVersion.current) { version =>
 
-<div id="content" class="wrapper doc">
-    <article>
-        <h1>Oops, something went wrong! <b> @message </b></h1>
-    </article>
-</div>
+        <section id="top">
+            <div class="wrapper">
+                <h1><a href="/">Time Tracking System</a></h1>
+            </div>
+        </section>
+
+        <div id="content" class="wrapper doc">
+            <article>
+                <h1>Oops, something went wrong! <b> @message </b></h1>
+            </article>
+        </div>
+    }
 }
