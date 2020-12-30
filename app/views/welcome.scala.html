@@ -44,7 +44,7 @@
         4. You can look at your overall statistics. Just press "Show statistics" button.
     </p>
 
-    <h2>You have to be authorized in the system so that you can use this application:</h2>
+    <h2>You have to be authorized in the system so that you can use it:</h2>
 
     <div id="two-forms">
         <div id="log-in-block" class="input-form">
@@ -66,11 +66,7 @@
 
         <div id="sign-up-block" class="input-form">
             <div class="form-name">
-                Sign Up.
-            </div>
-            <div id="password-caution">
-                Please, DO NOT use your real
-                passwords as I am not an expert in security!
+                Sign Up
             </div>
 
             @helper.form(action = helper.CSRF(routes.HomeController.createUser()), Symbol("id") -> "sign-up-form",
