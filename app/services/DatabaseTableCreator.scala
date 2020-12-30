@@ -1,6 +1,6 @@
 package services
 
-import DAOs.{SubjectDao, UserDao}
+import DAOs.{SessionTokenDao, SubjectDao, UserDao}
 import slick.jdbc.PostgresProfile.api._
 import slick.dbio.DBIO
 import slick.jdbc.JdbcBackend.Database
@@ -20,7 +20,7 @@ class DatabaseTableCreator{
   val db = Database.forConfig("postgres")
   val testDb = Database.forConfig("test-db-postgres")
 
-  val tables = List(UserDao.users, SubjectDao.subjects)
+  val tables = List(UserDao.users, SubjectDao.subjects, SessionTokenDao.tokens)
   val databases = List(db, testDb)
 
   databases.foreach(createInParticularDatabase)
