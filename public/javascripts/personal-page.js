@@ -90,8 +90,8 @@ function showSubjects(subjects) {
     
     for (let i = 0; i < subjects.length; i++) {
         const li = document.createElement("li");
-        console.log(i);
-        console.log(subjects[i]['name']);
+        //console.log(i);
+        //console.log(subjects[i]['name']);
         const subject = document.createTextNode(subjects[i]['name']);
 
         const time = document.createTextNode(subjects[i]['hours'] + "h : " +
@@ -164,10 +164,9 @@ function selectSubject(li) {
         }
     );
     li.style.backgroundColor = "#80c846";
-    console.log(5);
-    console.log(li);
+    //console.log(li);
     chosenSubject = li.getElementsByTagName('p')[0].textContent;
-    console.log("chosen: " + chosenSubject);
+    //console.log("chosen: " + chosenSubject);
 }
 
 function addListeners() {
@@ -180,9 +179,9 @@ function addListeners() {
 
 document.addEventListener("DOMContentLoaded", function() {
     const userAndToken = getUserAndToken();
-    console.log(userAndToken);
+    //console.log(userAndToken);
     subjects = getSubjects(userAndToken['user'], userAndToken['sessionToken']);
-    console.log(subjects);
+    //console.log(subjects);
     showSubjects(subjects);
     addListeners();
 });
