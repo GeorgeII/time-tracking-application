@@ -12,19 +12,47 @@
         <article>
             <h1>Hi, <b>@nickname</b>!</h1>
 
-            <div id="create-subject">
-            @helper.form(action = helper.CSRF(routes.AccountController.createSubject()),
-                Symbol("id") -> "create-subject-form",
-                Symbol("class") -> "helper-forms") {
-                    @helper.inputText(subjectForm("Enter your new subject here:"))
-                    <button id="create-subject-button">Create Subject</button>
-            }
+            <div id="flex-container">
+                <div id="left-column">
+                    <div id="create-subject">
+                    @helper.form(action = helper.CSRF(routes.AccountController.createSubject()),
+                        Symbol("id") -> "create-subject-form",
+                        Symbol("class") -> "helper-forms") {
+                            @helper.inputText(subjectForm("Enter your new subject here:"))
+                            <button id="create-subject-button">Create Subject</button>
+                    }
+                    </div>
+
+                    <div id="subjects" class="subject-list">
+                        <h3>
+                            Your subjects:
+                        </h3>
+                        <ul id="subjects-ul">
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="right-column">
+                    <div id="timer" class="timer-class">
+                        <div id="monitor">
+                            0h : 0m : 0s
+                        </div>
+                        <button id="start-timer-button" onclick="startTimer()">Start</button>
+                        <button id="stop-timer-button" data-csrf-value="@helper.CSRF.getToken.value" onclick="stopTimer()">
+                            Stop
+                        </button>
+                    </div>
+                    <div id="statistics">
+                        <button id="show-statistics-button" onclick="plotChart()">Show Statistics</button>
+                        <div id="canvas-holder">
+                            <canvas id="myChart" width="10" height="10"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="subjects" class="subject-list">
-                <p>Subject 1</p>
-                <p>Subject 2</p>
-            </div>
+
         </article>
     </div>
 }

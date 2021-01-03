@@ -1,7 +1,7 @@
 package services
 
 import models.Subject
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.{JsError, JsPath, JsResult, JsSuccess, JsValue, Json, OWrites, Reads}
 import services.UserManager
 
 import scala.concurrent.Await
@@ -11,10 +11,6 @@ import scala.util.{Failure, Success, Try}
 object SubjectManager {
 
   def create(name: String, user: String): Option[Int] = {
-    val exists = UserManager.isExist(user)
-    if (!exists)
-      return None
-
     val userId = UserManager.getId(user)
     if (userId.isEmpty)
       return None
@@ -62,8 +58,67 @@ object SubjectManager {
     }
   }
 
+  def updateTime(name: String, user: String, values: (Int, Int, Int, Long)): Option[Int] = {
+    val userId = UserManager.getId(user)
+    if (userId.isEmpty)
+      return None
+
+    val previousSubjectQuery = DAOs.SubjectDao.getSubject(name, userId.get)
+    val previousSubject = Try(Await.result(previousSubjectQuery, 3.second)) match {
+      case Success(res) => res
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+
+    if (previousSubject.isEmpty)
+      return None
+
+    val totalSeconds = previousSubject.get.totalSeconds + values._4
+    val hours = (totalSeconds / (60 * 60)).toInt
+    val minutes = (totalSeconds % (60 * 60) / 60).toInt
+    val seconds = (totalSeconds % 60).toInt
+
+    val subject = Subject(userId.get, name, hours, minutes, seconds, totalSeconds)
+    val updateInDatabase = DAOs.SubjectDao.updateSubject(subject)
+
+    Try(Await.result(updateInDatabase, 3.second)) match {
+      case Success(res) => Option(res)
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+  }
+
+  def isExist(name: String, user: String): Boolean = {
+    val userId = services.UserManager.getId(user)
+
+    if (userId.isEmpty)
+      return false
+
+    val selectFromDatabaseByNickname = DAOs.SubjectDao.getSubject(name, userId.get)
+    val result = Try(Await.result(selectFromDatabaseByNickname, 3.second)) match {
+      case Success(res) => res
+      case Failure(e) =>
+        e.printStackTrace()
+        None
+    }
+
+    result match {
+      case Some(x) => true
+      case None => false
+    }
+  }
+
   def convertToJson(subjects: Seq[Subject]): JsValue = {
     implicit val subjectWrites: OWrites[Subject] = Json.writes[Subject]
     Json.toJson(subjects)
+  }
+
+  /**
+   * Sorts in descending order.
+   */
+  def sortByTime(subjects: Seq[Subject]): Seq[Subject] = {
+    subjects.sortBy(-_.totalSeconds)
   }
 }

@@ -51,11 +51,9 @@ object UserManager {
         None
     }
 
-    if (result.isDefined) {
-      true
-    }
-    else {
-      false
+    result match {
+      case Some(x) => true
+      case _ => false
     }
   }
 
