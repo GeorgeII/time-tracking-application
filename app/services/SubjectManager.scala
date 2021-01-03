@@ -1,7 +1,7 @@
 package services
 
 import models.Subject
-import play.api.libs.json.{JsError, JsPath, JsResult, JsSuccess, JsValue, Json, OWrites, Reads}
+import play.api.libs.json.{JsValue, Json, OWrites}
 import services.UserManager
 
 import scala.concurrent.Await
